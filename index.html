@@ -6,6 +6,20 @@
   <title>Ведьмина полочка — аксессуары для вышивки</title>
   <link href="https://fonts.googleapis.com/css2?family=Uncial+Antiqua&family=Mountains+of+Christmas:wght@400;700&display=swap" rel="stylesheet">
   <style>
+    /* Фиксированная навигация */
+    .nav{
+      position:fixed;
+      top:0;left:0;right:0;
+      z-index:999;
+      background:rgba(201,181,233,0.92);
+      backdrop-filter: blur(6px);
+      box-shadow:0 4px 14px rgba(59,43,66,0.12);
+    }
+    .nav ul{margin:0;padding:10px 20px;display:flex;gap:20px;list-style:none;justify-content:center}
+    .nav a{text-decoration:none;color:var(--deep);font-family:'Uncial Antiqua',cursive;font-size:16px}
+    .nav a:hover{transform:scale(1.05)}
+
+    body{padding-top:64px;}
     :root{
       --lavender: #C9B5E9; /* фирменный дымчато-фиолетовый */
       --lavender-2: #E6DFF7;
@@ -87,7 +101,14 @@
   </style>
 </head>
 <body>
-  <main class="wrap">
+  <nav class="nav">
+    <ul>
+      <li><a href="#home">Главная</a></li>
+      <li><a href="#buy">Где купить</a></li>
+      <li><a href="#contacts">Контакты</a></li>
+    </ul>
+  </nav>
+  <main class="wrap" id="home">
     <!-- Верхний баннер -->
     <a class="top-banner wiggle" href="#top-banner" aria-label="Главный баннер Ведьмина полочка">
       <img src="https://i.postimg.cc/sX6chcMt/gemini-2-5-flash-image-Novogodnaa-oblozka-dla-soobsestva-Ved'min-0.jpg" alt="Новогодняя обложка — Ведьмина полочка">
@@ -101,7 +122,7 @@
       </div>
     </header>
 
-    <section aria-label="Магазины и социальные сети">
+    <section id="buy" aria-label="Магазины и социальные сети">
       <div class="banners">
         <a class="card wiggle" href="https://vk.com/witchshelf" target="_blank" rel="noopener noreferrer">
           <img src="https://i.postimg.cc/76sV2VCv/vk-logo.png" alt="VK — Ведьмина полочка">
@@ -141,7 +162,7 @@
 
     </section>
 
-    <footer>
+    <footer id="contacts">
       
       <p style="margin-top:8px; font-size:13px;color:#877089">
       <p style="margin-top:14px; font-size:14px; color:#5A4660"><strong>Владелец сайта:</strong> Бершак Екатерина Андреевна<br>
