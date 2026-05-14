@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Китайские цифры 1-99</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: linear-gradient(135deg, #ffe0ec, #fff5f8);
+  font-family: 'Comic Sans MS', Arial, sans-serif;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #c9184a;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.info {
+  text-align: center;
+  font-size: 18px;
+  color: #6a040f;
+  margin-bottom: 15px;
+}
+
+.info span {
+  background: #fff;
+  padding: 8px 16px;
+  border-radius: 20px;
+  margin: 0 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  font-weight: bold;
+  display: inline-block;
+}
+
+.level-name {
+  text-align: center;
+  font-size: 16px;
+  color: #6a040f;
+  margin-bottom: 10px;
+  font-style: italic;
+}
+
+.game {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  flex-wrap: wrap;
+}
+
+.jar-container {
+  position: relative;
+  width: 480px;
+  height: 600px;
+  background-image: url('https://i.postimg.cc/SxCXW29X/18.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.berry {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  text-shadow: 
+    -2px -2px 0 #6a040f,
+    2px -2px 0 #6a040f,
+    -2px 2px 0 #6a040f,
+    2px 2px 0 #6a040f,
+    0 0 6px rgba(0,0,0,0.9);
+  transition: transform 0.2s;
+  white-space: nowrap;
+  transform: translate(-50%, -50%);
+  padding: 4px 6px;
+  border-radius: 50%;
+  user-select: none;
+}
+
+.berry:hover {
+  transform: translate(-50%, -50%) scale(1.25);
+  z-index: 5;
+}
+
+.berry.correct {
+  color: #fff700;
+  animation: bounce 0.6s;
+  text-shadow: 
+    -2px -2px 0 #2d6a4f,
+    2px -2px 0 #2d6a4f,
+    -2px 2px 0 #2d6a4f,
+    2px 2px 0 #2d6a4f,
+    0 0 15px #fff700;
+}
+
+.berry.wrong { animation: shake 0.4s; }
+
+@keyframes bounce {
+  0%, 100% { transform: translate(-50%, -50%) scale(1); }
+  50% { transform: translate(-50%, -50%) scale(1.5); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translate(-50%, -50%); }
+  25% { transform: translate(calc(-50% - 8px), -50%); }
+  75% { transform: translate(calc(-50% + 8px), -50%); }
+}
+
+.character {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.bubble {
+  background: white;
+  border: 4px solid #c9184a;
+  border-radius: 20px;
+  padding: 20px 25px;
+  position: relative;
+  min-width: 200px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+}
+
+.bubble::after {
+  content: "";
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 12px solid transparent;
+  border-top-color: #c9184a;
+}
+
+.bubble p { font-size: 18px; color: #6a040f; margin-bottom: 8px; }
+.bubble .number { font-size: 64px; font-weight: bold; color: #c9184a; }
+
+.person {
+  font-size: 120px;
+  animation: wave 2s infinite;
+}
+
+@keyframes wave {
+  0%, 100% { transform: rotate(-5deg); }
+  50% { transform: rotate(5deg); }
+}
+
+.msg {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
+  min-height: 35px;
+  margin-top: 15px;
+}
+
+.msg.ok { color: #2d6a4f; }
+.msg.err { color: #c9184a; }
+
+button {
+  background: #c9184a;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  font-size: 16px;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 4px 0 #6a040f;
+  font-family: inherit;
+  margin: 5px;
+}
+
+button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 0 #6a040f;
+}
+
+.buttons { text-align: center; margin-top: 15px; }
+
+.setup-mode .berry {
+  background: rgba(255, 255, 0, 0.6);
+  border: 2px dashed red;
+  cursor: move;
+}
+
+.coords {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  background: white;
+  padding: 10px;
+  border: 2px solid #c9184a;
+  border-radius: 10px;
+  font-family: monospace;
+  font-size: 11px;
+  max-height: 300px;
+  width: 280px;
+  overflow-y: auto;
+  display: none;
+  z-index: 100;
+  white-space: pre;
+}
+
+.coords.show { display: block; }
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.6);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.show { display: flex; }
+
+.modal-content {
+  background: white;
+  padding: 40px 50px;
+  border-radius: 30px;
+  text-align: center;
+  border: 5px solid #c9184a;
+  max-width: 500px;
+  animation: pop 0.5s;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.modal h2 { color: #c9184a; font-size: 32px; margin-bottom: 15px; }
+.modal p { color: #6a040f; font-size: 20px; margin-bottom: 20px; white-space: pre-line; }
+.modal .big-emoji { font-size: 80px; margin: 20px 0; }
+
+.progress {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin: 15px 0;
+}
+
+.dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #ffd6e0;
+  border: 2px solid #c9184a;
+}
+
+.dot.done { background: #c9184a; }
+.dot.current { background: #ff8fa3; animation: pulse 1s infinite; }
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+}
+</style>
+</head>
+<body>
+
+<h1>🍓Китайские цифры 1-99🍓</h1>
+<div class="info">
+  <span id="level">Уровень: 1/5</span>
+  <span id="found">Найдено: 0/8</span>
+  <span id="score">Очки: 0</span>
+</div>
+<div class="level-name" id="levelName">Уровень 1: цифры 1-10</div>
+
+<div class="game">
+  <div class="jar-container" id="jar"></div>
+  
+  <div class="character">
+    <div class="bubble">
+      <p>Найди цифру:</p>
+      <div class="number" id="target">?</div>
+    </div>
+    <div class="person">🧒</div>
+  </div>
+</div>
+
+<div class="msg" id="msg"></div>
+<div class="buttons">
+  <button onclick="restartGame()">🔄 Начать заново</button>
+  <button onclick="toggleSetup()">⚙️ Подвинуть иероглифы</button>
+</div>
+
+<div class="coords" id="coords"></div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <div class="big-emoji" id="modalEmoji">🎉</div>
+    <h2 id="modalTitle">Уровень пройден!</h2>
+    <p id="modalText">Молодец!</p>
+    <div class="progress" id="progressDots"></div>
+    <button onclick="closeModal()" id="modalBtn">Дальше ➡️</button>
+  </div>
+</div>
+
+<script>
+// ============ УРОВНИ ============
+var LEVELS = [
+  { name: 'Уровень 1: цифры 1-10',         numbers: [1,2,3,4,5,6,7,8,9,10] },
+  { name: 'Уровень 2: подростки 11-19',    numbers: [11,12,13,14,15,16,17,18,19] },
+  { name: 'Уровень 3: десятки',            numbers: [20,30,40,50,60,70,80,90] },
+  { name: 'Уровень 4: все числа 0-99',     numbers: range(0,99) },
+  { name: 'Уровень 5: закрепление 0-99',   numbers: range(0,99) }
+];
+
+var TARGETS_PER_LEVEL = 8;
+var TOTAL_LEVELS = LEVELS.length;
+
+function range(a, b) {
+  var arr = [];
+  for (var i = a; i <= b; i++) arr.push(i);
+  return arr;
+}
+
+// ============ ПОЗИЦИИ МАЛИНОК ============
+var berryPositions = [
+  {x: 24.2, y: 38.5},
+  {x: 42.7, y: 34.8},
+  {x: 62.5, y: 38.7},
+  {x: 22.3, y: 54.8},
+  {x: 42.9, y: 52},
+  {x: 76, y: 60.2},
+  {x: 77.3, y: 45.3},
+  {x: 41.5, y: 67.7},
+  {x: 59.4, y: 53.5},
+  {x: 76.9, y: 74.3},
+  {x: 23.3, y: 71.3},
+  {x: 59, y: 67.2},
+  {x: 57.7, y: 84.2},
+  {x: 22.7, y: 86.8},
+  {x: 42, y: 83},
+  {x: 75.6, y: 89.7}
+];
+
+// ============ КИТАЙСКИЕ ЦИФРЫ ============
+function toChinese(n) {
+  var d = ['零','一','二','三','四','五','六','七','八','九'];
+  if (n === 0) return '零';
+  if (n < 10) return d[n];
+  if (n === 10) return '十';
+  if (n < 20) return '十' + d[n - 10];
+  var t = Math.floor(n / 10);
+  var o = n % 10;
+  if (o === 0) return d[t] + '十';
+  return d[t] + '十' + d[o];
+}
+
+// ============ СОСТОЯНИЕ ============
+var currentLevel = 0;
+var foundInLevel = 0;
+var totalScore = 0;
+var currentTarget = 0;
+var currentNumbers = [];
+var usedTargets = [];
+var setupMode = false;
+var modalNext = null;
+
+function restartGame() {
+  currentLevel = 0;
+  foundInLevel = 0;
+  totalScore = 0;
+  usedTargets = [];
+  closeModal();
+  newRound();
+}
+
+function newRound() {
+  var level = LEVELS[currentLevel];
+  var pool = level.numbers.slice();
+  
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+  }
+  
+  currentNumbers = [];
+  while (currentNumbers.length < berryPositions.length) {
+    for (var i = 0; i < pool.length && currentNumbers.length < berryPositions.length; i++) {
+      currentNumbers.push(pool[i]);
+    }
+    for (var i = pool.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = pool[i]; pool[i] = pool[j]; pool[j] = tmp;
+    }
+  }
+  
+  var onJar = currentNumbers.filter(function(n) {
+    return usedTargets.indexOf(n) === -1;
+  });
+  var uniqOnJar = [];
+  for (var i = 0; i < onJar.length; i++) {
+    if (uniqOnJar.indexOf(onJar[i]) === -1) uniqOnJar.push(onJar[i]);
+  }
+  if (uniqOnJar.length === 0) uniqOnJar = currentNumbers.slice();
+  
+  currentTarget = uniqOnJar[Math.floor(Math.random() * uniqOnJar.length)];
+  usedTargets.push(currentTarget);
+  
+  document.getElementById('level').innerText = 'Уровень: ' + (currentLevel + 1) + '/' + TOTAL_LEVELS;
+  document.getElementById('found').innerText = 'Найдено: ' + foundInLevel + '/' + TARGETS_PER_LEVEL;
+  document.getElementById('score').innerText = 'Очки: ' + totalScore;
+  document.getElementById('levelName').innerText = level.name;
+  document.getElementById('target').innerText = currentTarget;
+  document.getElementById('msg').innerText = '';
+  
+  drawBerries();
+}
+
+function drawBerries() {
+  var jar = document.getElementById('jar');
+  jar.innerHTML = '';
+  
+  for (var i = 0; i < berryPositions.length; i++) {
+    var pos = berryPositions[i];
+    var num = currentNumbers[i];
+    
+    var berry = document.createElement('div');
+    berry.className = 'berry';
+    berry.innerText = toChinese(num);
+    berry.setAttribute('data-num', num);
+    berry.setAttribute('data-idx', i);
+    berry.style.left = pos.x + '%';
+    berry.style.top = pos.y + '%';
+    
+    var chLen = toChinese(num).length;
+    if (chLen === 3) berry.style.fontSize = '16px';
+    else if (chLen === 2) berry.style.fontSize = '20px';
+    else berry.style.fontSize = '28px';
+    
+    berry.onclick = (function(b) {
+      return function() {
+        if (setupMode) return;
+        checkAnswer(b);
+      };
+    })(berry);
+    
+    berry.onmousedown = (function(idx) {
+      return function(e) {
+        if (!setupMode) return;
+        e.preventDefault();
+        startDrag(idx, e);
+      };
+    })(i);
+    
+    jar.appendChild(berry);
+  }
+}
+
+function checkAnswer(berry) {
+  var num = parseInt(berry.getAttribute('data-num'));
+  if (berry.classList.contains('correct')) return;
+  
+  if (num === currentTarget) {
+    berry.classList.add('correct');
+    totalScore += 10 * (currentLevel + 1);
+    foundInLevel++;
+    
+    document.getElementById('score').innerText = 'Очки: ' + totalScore;
+    document.getElementById('found').innerText = 'Найдено: ' + foundInLevel + '/' + TARGETS_PER_LEVEL;
+    document.getElementById('msg').innerText = '✅ Правильно! ' + currentTarget + ' = ' + toChinese(currentTarget);
+    document.getElementById('msg').className = 'msg ok';
+    
+    setTimeout(function() {
+      if (foundInLevel >= TARGETS_PER_LEVEL) {
+        levelComplete();
+      } else {
+        newRound();
+      }
+    }, 1500);
+  } else {
+    berry.classList.add('wrong');
+    document.getElementById('msg').innerText = '❌ Это ' + num + ' (' + toChinese(num) + '), а нужно ' + currentTarget;
+    document.getElementById('msg').className = 'msg err';
+    setTimeout(function() { berry.classList.remove('wrong'); }, 500);
+  }
+}
+
+function levelComplete() {
+  if (currentLevel < TOTAL_LEVELS - 1) {
+    showModal({
+      emoji: '🎉',
+      title: 'Уровень ' + (currentLevel + 1) + ' пройден!',
+      text: 'Молодец! Найдено ' + TARGETS_PER_LEVEL + ' цифр!\nИдём на уровень ' + (currentLevel + 2) + '!',
+      btn: 'Дальше ➡️',
+      next: function() {
+        currentLevel++;
+        foundInLevel = 0;
+        usedTargets = [];
+        newRound();
+      }
+    });
+  } else {
+    showModal({
+      emoji: '🏆',
+      title: 'ИГРА ПРОЙДЕНА!',
+      text: 'Поздравляем! Ты выучил(а) все китайские цифры! 🎊\nОчков: ' + totalScore,
+      btn: '🔄 Играть заново',
+      next: restartGame
+    });
+  }
+}
+
+function showModal(opts) {
+  document.getElementById('modalEmoji').innerText = opts.emoji;
+  document.getElementById('modalTitle').innerText = opts.title;
+  document.getElementById('modalText').innerText = opts.text;
+  document.getElementById('modalBtn').innerText = opts.btn;
+  document.getElementById('modal').classList.add('show');
+  modalNext = opts.next;
+  drawProgress();
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('show');
+  if (modalNext) {
+    var fn = modalNext;
+    modalNext = null;
+    fn();
+  }
+}
+
+function drawProgress() {
+  var dots = document.getElementById('progressDots');
+  dots.innerHTML = '';
+  for (var i = 0; i < TOTAL_LEVELS; i++) {
+    var d = document.createElement('div');
+    d.className = 'dot';
+    if (i < currentLevel + 1) d.className += ' done';
+    else if (i === currentLevel + 1) d.className += ' current';
+    dots.appendChild(d);
+  }
+}
+
+function toggleSetup() {
+  setupMode = !setupMode;
+  document.body.classList.toggle('setup-mode', setupMode);
+  document.getElementById('coords').classList.toggle('show', setupMode);
+  if (setupMode) updateCoords();
+}
+
+function startDrag(idx, e) {
+  var jar = document.getElementById('jar');
+  var rect = jar.getBoundingClientRect();
+  
+  function onMove(ev) {
+    var x = ((ev.clientX - rect.left) / rect.width) * 100;
+    var y = ((ev.clientY - rect.top) / rect.height) * 100;
+    x = Math.max(0, Math.min(100, x));
+    y = Math.max(0, Math.min(100, y));
+    berryPositions[idx].x = Math.round(x * 10) / 10;
+    berryPositions[idx].y = Math.round(y * 10) / 10;
+    
+    var berry = document.querySelector('.berry[data-idx="' + idx + '"]');
+    berry.style.left = x + '%';
+    berry.style.top = y + '%';
+    updateCoords();
+  }
+  
+  function onUp() {
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('mouseup', onUp);
+  }
+  
+  document.addEventListener('mousemove', onMove);
+  document.addEventListener('mouseup', onUp);
+}
+
+function updateCoords() {
+  var txt = 'СКОПИРУЙ В КОД:\n\nvar berryPositions = [\n';
+  for (var i = 0; i < berryPositions.length; i++) {
+    txt += '  {x: ' + berryPositions[i].x + ', y: ' + berryPositions[i].y + '}';
+    if (i < berryPositions.length - 1) txt += ',';
+    txt += '\n';
+  }
+  txt += '];';
+  document.getElementById('coords').innerText = txt;
+}
+
+restartGame();
+</script>
+
+</body>
+</html>
