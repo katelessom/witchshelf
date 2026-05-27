@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>🗡️ Hyrule English Quest 🛡️</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--pink:#ffb6d5;--pink-deep:#ff77b0;--gold:#f7d774;--gold-deep:#c9a227;--light:#fff5fa;--bg1:#2b1a3d;--bg2:#4a2a6b;--shadow:0 6px 18px rgba(0,0,0,.35)}
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Trebuchet MS",Georgia,serif;color:var(--light);background:radial-gradient(circle at 20% 10%,rgba(255,182,213,.25),transparent 40%),radial-gradient(circle at 80% 90%,rgba(247,215,116,.2),transparent 40%),linear-gradient(135deg,var(--bg1),var(--bg2));background-attachment:fixed;min-height:100vh;padding:20px}
+  header{text-align:center;padding:20px 10px 10px}
+  h1{font-size:2.4rem;color:var(--gold);text-shadow:2px 2px 0 #000,0 0 20px var(--pink-deep);margin:0}
+  .triforce{font-size:2.5rem}
+  .subtitle{color:var(--pink);margin-top:8px;font-style:italic}
+  .container{max-width:820px;margin:0 auto}
+  .card{background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));border:2px solid var(--gold);border-radius:18px;padding:24px;margin:18px 0;box-shadow:var(--shadow)}
+  .progress-wrap{background:rgba(0,0,0,.35);border-radius:20px;overflow:hidden;height:18px;margin:10px 0;border:1px solid var(--gold)}
+  .progress{height:100%;width:0%;background:linear-gradient(90deg,var(--pink),var(--gold));transition:width .3s}
+  .q-number{color:var(--gold);font-weight:bold;font-size:1.1rem}
+  .question{font-size:1.15rem;margin:10px 0 16px;line-height:1.5}
+  .options{display:flex;flex-direction:column;gap:10px}
+  .option{background:rgba(255,255,255,.06);border:2px solid var(--pink);color:var(--light);padding:12px 16px;border-radius:12px;cursor:pointer;text-align:left;font-size:1rem;transition:all .2s;font-family:inherit}
+  .option:hover{background:var(--pink);color:#3a0d29}
+  .option.selected{background:var(--gold);color:#3a0d29;border-color:var(--gold-deep);box-shadow:0 0 12px var(--gold)}
+  .btn{background:linear-gradient(180deg,var(--pink),var(--pink-deep));color:#fff;border:2px solid var(--gold);padding:12px 26px;border-radius:30px;font-size:1.05rem;font-weight:bold;cursor:pointer;margin-top:14px;box-shadow:var(--shadow);font-family:inherit}
+  .btn:hover{transform:scale(1.05)}
+  .btn:disabled{opacity:.4;cursor:not-allowed}
+  .nav{display:flex;justify-content:space-between;gap:10px;margin-top:14px}
+  .hidden{display:none !important}
+  .score-big{font-size:3rem;color:var(--gold);text-align:center;text-shadow:2px 2px 0 #000}
+  .rank{text-align:center;font-size:1.4rem;color:var(--pink);margin:8px 0 18px}
+  .section-row{display:flex;align-items:center;gap:10px;margin:10px 0}
+  .section-name{flex:1.2;font-weight:bold;color:var(--gold);font-size:.95rem}
+  .bar-bg{flex:2;background:rgba(0,0,0,.35);border-radius:12px;height:14px;border:1px solid var(--pink);overflow:hidden}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--pink),var(--gold));transition:width 1s}
+  .section-score{flex:.6;text-align:right;font-weight:bold;font-size:.9rem}
+  .section-score{flex:.6;text-align:right;font-weight:bold;font-size:.9rem}
+  .review{max-height:340px;overflow-y:auto;background:rgba(0,0,0,.25);padding:14px;border-radius:10px;margin-top:14px;border:1px solid var(--pink)}
+  .rev-item{padding:6px 4px;border-bottom:1px dashed rgba(255,255,255,.15);font-size:.95rem}
+  .ok{color:#9be39b}.bad{color:#ff9aa2}
+  footer{text-align:center;margin-top:30px;color:var(--pink);font-size:.85rem}
+</style>
+</head>
+<body>
+<header>
+  <div class="triforce">▲ ▲ ▲</div>
+  <h1>Hyrule English Quest</h1>
+  <div class="subtitle">✨ Prepare Second Edition Level 1 — Diagnostic Test ✨</div>
+</header>
+
+<div class="container">
+  <div id="intro" class="card">
+    <h2 style="color:var(--pink);margin-top:0">Добро пожаловать, принцесса! 👑</h2>
+    <p>Перед тобой <b>100 испытаний</b> королевства Хайрул. Отвечай на вопросы, собирай частицы Трифорса и узнай свой уровень английского!</p>
+    <p>💖 Удачи, отважный герой!</p>
+	    <div style="margin:18px 0">
+      <label for="studentName" style="display:block;color:var(--gold);font-weight:bold;margin-bottom:8px">✨ Как тебя зовут?</label>
+      <input type="text" id="studentName" placeholder="Введи своё имя..." style="width:100%;padding:12px 16px;border-radius:12px;border:2px solid var(--pink);background:rgba(255,255,255,.1);color:var(--light);font-size:1rem;font-family:inherit;outline:none">
+      <div id="nameError" style="color:#ff9aa2;margin-top:6px;font-size:.9rem;display:none">⚠️ Пожалуйста, введи имя!</div>
+    </div>
+    <button class="btn" id="startBtn">🗡️ Начать приключение →</button>
+  </div>
+
+  <div id="quiz" class="card hidden">
+    <div class="q-number" id="qNum"></div>
+    <div class="progress-wrap"><div class="progress" id="progress"></div></div>
+    <div class="question" id="qText"></div>
+    <div class="options" id="qOptions"></div>
+    <div class="nav">
+      <button class="btn" id="prevBtn">← Назад</button>
+      <button class="btn" id="nextBtn">Далее →</button>
+    </div>
+  </div>
+
+  <div id="results" class="card hidden">
+    <h2 style="text-align:center;color:var(--gold);margin-top:0">🏆 Приключение завершено! 🏆</h2>
+    <div class="score-big" id="finalScore"></div>
+    <div class="rank" id="rank"></div>
+    <p id="comment" style="text-align:center;font-style:italic"></p>
+    <h3 style="color:var(--pink)">📜 Анализ по разделам</h3>
+    <div id="sections"></div>
+    <h3 style="color:var(--pink)">💡 Рекомендации</h3>
+    <ul id="advice"></ul>
+    <h3 style="color:var(--pink)">🔍 Разбор ошибок</h3>
+    <div class="review" id="review"></div>
+    <div style="text-align:center">
+      <button class="btn" id="restartBtn">🔄 Пройти заново</button>
+    </div>
+  </div>
+</div>
+<footer>Made with 💖 in the Kingdom of Hyrule</footer>
+
+<script>
+// Все 100 вопросов из PRE-DT-T.pdf
+// Ответы (a: индекс 0=A, 1=B, 2=C) сверены с PRE-DT-T_AK.pdf
+const questions = [
+ {q:"August is the month before ___.",o:["July","September","October"],a:1,t:"Months & Days"},
+ {q:"Is this ___ watch?",o:["your","you","our"],a:0,t:"Pronouns"},
+ {q:"Leo is not from Turkey, he's from ___.",o:["Russian","Chinese","Russia"],a:2,t:"Countries & Nationalities"},
+ {q:"Where ___ they from?",o:["is","aren't","are"],a:2,t:"Verb to be"},
+ {q:"She speaks Spanish but she's not from Spain, she's ___.",o:["Mexican","Argentina","Brazil"],a:0,t:"Countries & Nationalities"},
+ {q:"I'm Anna. I'm ten years old. I have two sisters and one ___.",o:["son","brother","nephew"],a:1,t:"Family"},
+ {q:"I think this is ___ phone.",o:["Gina","Ginas","Gina's"],a:2,t:"Possessive 's"},
+ {q:"Do you know ___ address?",o:["their","they","they're"],a:0,t:"Possessive Pronouns"},
+ {q:"Do you have any food? I'm very ___.",o:["tired","hungry","clever"],a:1,t:"Adjectives (feelings)"},
+ {q:"___ Turkish? No, he isn't.",o:["He is","Are he","Is he"],a:2,t:"Verb to be (questions)"},
+ {q:"We have a shower in the ___.",o:["kitchen","bathroom","living room"],a:1,t:"House & Rooms"},
+ {q:"___ three windows in the dining room.",o:["Are there","There is","There are"],a:2,t:"There is/are"},
+ {q:"Your phone is ___ the table in the kitchen.",o:["on","in","at"],a:0,t:"Prepositions of place"},
+ {q:"There is a ___ by my bed so I know the time when I wake up.",o:["guitar","poster","clock"],a:2,t:"House & Objects"},
+ {q:"I ___ a computer in my bedroom.",o:["have got","has got","am got"],a:0,t:"Have got"},
+ {q:"He's got a ___ to put his money in.",o:["wallet","scarf","coat"],a:0,t:"Objects & Clothes"},
+ {q:"We ___ any money to buy lunch today.",o:["don't got","hasn't got","haven't got"],a:2,t:"Have got (negative)"},
+ {q:"___ my bag because I think this is your bag?",o:["Has you got","Have you got","You've got"],a:1,t:"Have got (questions)"},
+ {q:"Has she got your phone number?",o:["Yes, she has.","Yes, she does.","No, she has."],a:0,t:"Have got (short answers)"},
+ {q:"My brother likes to ___ underwater.",o:["sing","swim","sail"],a:1,t:"Verbs (actions)"},
+ {q:"___ ride a horse?",o:["Can","Can you","You can"],a:1,t:"Can (ability)"},
+ {q:"You find your ___ in your mouth.",o:["feet","nose","teeth"],a:2,t:"Body"},
+ {q:"Can you stand on one leg?",o:["Yes, I can't.","No, I can't.","No, I can."],a:1,t:"Can (short answers)"},
+ {q:"Your guitar is ___ the door.",o:["on","in","behind"],a:2,t:"Prepositions of place"},
+ {q:"___ are one of my favourite vegetables.",o:["Pasta","Eggs","Potatoes"],a:2,t:"Food"},
+ {q:"Do you like ___?",o:["rices","a rice","rice"],a:2,t:"Countable/Uncountable"},
+ {q:"We have some ___. Do you want one?",o:["bananas","banana","a banana"],a:0,t:"Countable/Uncountable"},
+ {q:"The party starts at 6.00 and goes on ___ 11.00.",o:["from","until","at"],a:1,t:"Prepositions of time"},
+ {q:"The class starts at 14.30 which is the same as ___.",o:["two thirty","two o'clock","three thirty"],a:0,t:"Time"},
+ {q:"We ___ the bus to school because we live far away.",o:["walk","catch","have"],a:1,t:"Verbs (daily routine)"},
+ {q:"I always ___ when I get up.",o:["do a shower","wash the shower","have a shower"],a:2,t:"Daily routine"},
+ {q:"Tim ___ lunch at 1.00 o'clock.",o:["eats","eat","not eat"],a:0,t:"Present Simple"},
+ {q:"You ___ work until 4.00 o'clock!",o:["not start","start","don't start"],a:2,t:"Present Simple (negative)"},
+ {q:"You can say 3.15 or ___",o:["quarter to three","half past three","quarter past three"],a:2,t:"Time"},
+ {q:"My favourite school subject is ___. I play the guitar.",o:["art","music","science"],a:1,t:"School subjects"},
+ {q:"We often ___ our friends in the café after school.",o:["catch","meet","get"],a:1,t:"Verbs"},
+ {q:"A: ___ do you live? B: In the town centre.",o:["When","Where","What"],a:1,t:"Question words"},
+ {q:"A: ___ do you play football? B: Twice a week.",o:["Why","How often","When"],a:1,t:"Question words"},
+ {q:"A: When ___ breakfast on a school day? B: Around 7 o'clock.",o:["do you have","have you","you have"],a:0,t:"Present Simple (questions)"},
+ {q:"Josh ___ badminton and he likes swimming.",o:["does","plays","makes"],a:1,t:"Sports collocations"},
+ {q:"She likes ___ and she's very fast.",o:["run","runing","running"],a:2,t:"Gerund (-ing)"},
+ {q:"I ___ because I'm not very good at it.",o:["not like dancing","don't like dancing","don't like danceing"],a:1,t:"Gerund (-ing)"},
+ {q:"It ___ to sit at home all day doing nothing.",o:["isn't good at you","is good for you","isn't good for you"],a:2,t:"Prepositions (good for/at)"},
+ {q:"You learn how to make cakes and pizza in ___ club.",o:["coding","cookery","judo"],a:1,t:"Clubs & Hobbies"},
+ {q:"I like playing chess so I go to the ___ club on Tuesday and Thursday.",o:["board games","athletics","film"],a:0,t:"Clubs & Hobbies"},
+ {q:"Right now we ___ our homework for tomorrow.",o:["do","are doing","is doing"],a:1,t:"Present Continuous"},
+ {q:"He ___ dinner because he is not home at the moment.",o:["isn't cooking","is cooking","not cooking"],a:0,t:"Present Continuous (negative)"},
+ {q:"___ the dog now?",o:["Are you walk","Is you walking","Are you walking"],a:2,t:"Present Continuous (questions)"},
+ {q:"Is she tidying her room?",o:["Yes, she is.","No, she is.","Yes, she isn't."],a:0,t:"Present Continuous (short answers)"},
+ {q:"Justin Bieber has a lot of ___ who love his music.",o:["newspapers","fans","songs"],a:1,t:"Vocabulary (people)"},
+ {q:"I ___ have a shower in the morning before I go to school. It helps wake me up.",o:["never","always","sometimes"],a:1,t:"Adverbs of frequency"}
+];
+</script>
+<script>
+// Вопросы 51-100 из PRE-DT-T.pdf
+const questions2 = [
+ {q:"We ___ eat chocolate after we go to bed because it's bad for our teeth.",o:["often","never","always"],a:1,t:"Adverbs of frequency"},
+ {q:"I use a ___ to do my school work and play games.",o:["fitness tracker","smart speaker","laptop"],a:2,t:"Technology"},
+ {q:"___ emails do you send every day?",o:["How many","How much","How"],a:0,t:"Quantifiers (how many/much)"},
+ {q:"___ money do you take to school for your lunch?",o:["How many","How much","How often"],a:1,t:"Quantifiers (how many/much)"},
+ {q:"A ___ grows food for people to eat.",o:["firefighter","doctor","farmer"],a:2,t:"Jobs"},
+ {q:"He's a ___ and writes stories for the local newspaper.",o:["journalist","nurse","waiter"],a:0,t:"Jobs"},
+ {q:"I ___ the bus to school every day.",o:["catch","am catching","catches"],a:0,t:"Present Simple vs Continuous"},
+ {q:"They ___ today because it's Sunday.",o:["not work","aren't working","not working"],a:1,t:"Present Simple vs Continuous"},
+ {q:"Can I have a ___ and fork to eat my food, please?",o:["bowl","knife","salt"],a:1,t:"Food & Kitchen"},
+ {q:"Doctors often work in a ___.",o:["museum","hospital","hotel"],a:1,t:"Places in town"},
+ {q:"Is there a train ___ near here?",o:["park","bank","station"],a:2,t:"Places in town"},
+ {q:"___ any cafés on this street?",o:["Is there","Are there","There are"],a:1,t:"There is/are"},
+ {q:"Museums in big cities are very ___ to visit.",o:["expensive","tall","great"],a:0,t:"Adjectives"},
+ {q:"Our dogs live ___ in the garden. They don't come into the house.",o:["inside","near","outside"],a:2,t:"Prepositions of place"},
+ {q:"The chair is ___ the picture.",o:["outside","above","below"],a:2,t:"Prepositions of place"},
+ {q:"Visiting different countries is very ___.",o:["safe","cheap","interesting"],a:2,t:"Adjectives"},
+ {q:"In London a lot of people travel by ___ or as it's also called, the tube.",o:["underground","tram","boat"],a:0,t:"Transport"},
+ {q:"My dad always walks to work ___ he says it's good for him.",o:["because","and","but"],a:0,t:"Conjunctions"},
+ {q:"I want to be a doctor ___ I'm not good at science.",o:["or","but","and"],a:1,t:"Conjunctions"},
+ {q:"You can have water, juice ___ milk with your dinner.",o:["but","because","or"],a:2,t:"Conjunctions"},
+ {q:"He's ___ with his friends now.",o:["going","going out","going to"],a:1,t:"Phrasal verbs"},
+ {q:"We're ___ everyone at 10 o'clock at the cinema.",o:["visiting","going","meeting"],a:2,t:"Verbs"},
+ {q:"___ go to the cinema on Saturday.",o:["Shall","Let's","Let's we"],a:1,t:"Suggestions (Let's)"},
+ {q:"___ go shopping at the weekend?",o:["Let's","Shall","Shall we"],a:2,t:"Suggestions (Shall we)"},
+ {q:"Do you like this pair of ___?",o:["skirt","jeans","shirt"],a:1,t:"Clothes"},
+ {q:"I don't like my sister's ___. They look very uncomfortable.",o:["glasses","dresses","shoes"],a:2,t:"Clothes"},
+ {q:"We are going to three ___ tonight!",o:["partys","party","parties"],a:2,t:"Plurals (irregular)"},
+ {q:"They are all wearing ___.",o:["watchs","watches","watchies"],a:1,t:"Plurals (irregular)"},
+ {q:"My uncle has short blond hair and a ___.",o:["brown beard","beard brown","slim beard"],a:0,t:"Appearance (word order)"},
+ {q:"My daughter ___ long hair.",o:["is","has got","have"],a:1,t:"Have got (description)"},
+ {q:"The teacher ___ tall and slim.",o:["has got","has","is"],a:2,t:"Verb to be (description)"},
+ {q:"Sam ___ a red T-shirt today.",o:["are wearing","is wearing","wears"],a:1,t:"Present Continuous (clothes)"},
+ {q:"It's raining outside. Have you got ___?",o:["an umbrella","a perfume","a rucksack"],a:0,t:"Objects"},
+ {q:"I need the ___ to cut this paper.",o:["sweets","scissors","stamps"],a:1,t:"Objects"},
+ {q:"They ___ a new pair of trainers because their old ones are broken.",o:["want","need","like"],a:1,t:"Verbs (want/need/like)"},
+ {q:"$4.50 in dollars is ___.",o:["four pounds fifty","four euros fifty","four dollars fifty"],a:2,t:"Money & Shopping"},
+ {q:"$65 is ___ expensive. I haven't got that much money.",o:["too","but","to"],a:0,t:"Money & Shopping (too)"},
+ {q:"The ___ in this park is very green and looks nice.",o:["river","forest","grass"],a:2,t:"Nature"},
+ {q:"My dad is ___ than my mum.",o:["young","more young","younger"],a:2,t:"Comparatives"},
+ {q:"He is ___ than me, but I am older.",o:["taller","more tall","too tall"],a:0,t:"Comparatives"},
+ {q:"Working in a bank isn't very ___. It must be boring.",o:["fantastic","exciting","attractive"],a:1,t:"Adjectives"},
+ {q:"The weather is hot in ___.",o:["winter","autumn","summer"],a:2,t:"Seasons & Weather"},
+ {q:"I like hockey but I only play ___ in winter.",o:["it's","it","them"],a:1,t:"Pronouns (object)"},
+ {q:"We are ___ in a hotel by the sea.",o:["leaving","visiting","staying"],a:2,t:"Travel"},
+ {q:"We are travelling ___ two weeks.",o:["until","for","from"],a:1,t:"Prepositions (for/since)"},
+ {q:"The music at the concert was very ___ last night.",o:["excited","loud","tired"],a:1,t:"Adjectives"},
+ {q:"They ___ at the concert last night.",o:["weren't","wasn't","aren't"],a:0,t:"Past Simple (was/were)"},
+ {q:"They ___ at 10 o'clock yesterday.",o:["arrive","are arriving","arrived"],a:2,t:"Past Simple (regular)"},
+ {q:"How old ___ you in 2015?",o:["is","were","was"],a:1,t:"Past Simple (was/were)"},
+ {q:"My grandparents ___ to a concert last weekend.",o:["wented","goed","went"],a:1,t:"Past Simple (irregular)"}
+];
+
+// Объединяем все 100 вопросов
+questions.push(...questions2);
+
+let current = 0;
+let answers = new Array(questions.length).fill(null);
+const $ = id => document.getElementById(id);
+
+let studentName = '';
+
+function startQuiz(){
+  // Проверка имени только при первом запуске (с кнопки startBtn)
+  const nameInput = $('studentName');
+  if(nameInput){
+    const val = nameInput.value.trim();
+    if(!val){
+      $('nameError').style.display = 'block';
+      return;
+    }
+    studentName = val;
+  }
+  $('intro').classList.add('hidden');
+  $('results').classList.add('hidden');
+  $('quiz').classList.remove('hidden');
+  current = 0;
+  answers = new Array(questions.length).fill(null);
+  showQ();
+}
+
+function showQ(){
+  const q = questions[current];
+  $('qNum').textContent = `Вопрос ${current+1} из ${questions.length} 💎`;
+  $('qText').textContent = q.q;
+  const opts = $('qOptions');
+  opts.innerHTML = '';
+  q.o.forEach((opt,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'option' + (answers[current]===i?' selected':'');
+    btn.textContent = String.fromCharCode(65+i) + '. ' + opt;
+    btn.onclick = ()=>{ answers[current] = i; showQ(); };
+    opts.appendChild(btn);
+  });
+  $('progress').style.width = ((current+1)/questions.length*100)+'%';
+  $('prevBtn').disabled = current === 0;
+  $('nextBtn').textContent = current === questions.length-1 ? '🏆 Завершить' : 'Далее →';
+}
+
+function nextQ(){
+  if(current < questions.length-1){ current++; showQ(); }
+  else { finish(); }
+}
+
+function prevQ(){
+  if(current > 0){ current--; showQ(); }
+}
+
+function finish(){
+  $('quiz').classList.add('hidden');
+  $('results').classList.remove('hidden');
+
+  let correct = 0;
+  const sections = {};
+  const wrong = [];
+
+  questions.forEach((q,i)=>{
+    if(!sections[q.t]) sections[q.t] = {ok:0,total:0};
+    sections[q.t].total++;
+    if(answers[i] === q.a){
+      correct++;
+      sections[q.t].ok++;
+    } else {
+      wrong.push({i,q});
+    }
+  });
+
+  const percent = Math.round(correct/questions.length*100);
+  $('finalScore').textContent = `${correct} / ${questions.length}  (${percent}%)`;
+    document.querySelector('#results h2').textContent = `🏆 ${studentName}, приключение завершено! 🏆`;
+
+  let rank, comment;
+  if(percent >= 90){rank='👑 Принцесса Зельда — Мастер Хайрула!';comment='Невероятно! Ты владеешь языком как магией.';}
+  else if(percent >= 75){rank='🗡️ Герой времени';comment='Отличный результат! Ты почти всё знаешь.';}
+  else if(percent >= 60){rank='🛡️ Рыцарь Хайрула';comment='Хорошо! Есть пробелы, но в целом крепкий уровень.';}
+  else if(percent >= 40){rank='🏹 Юный путник';comment='Неплохо для начала. Стоит подтянуть основы.';}
+  else if(percent >= 20){rank='🌱 Новичок из Кокири';comment='Не расстраивайся, путь героя только начинается!';}
+  else {rank='👶 Первые шаги';comment='Начни с самых базовых тем — и всё получится!';}
+  $('rank').textContent = rank;
+  $('comment').textContent = comment;
+
+  const secDiv = $('sections');
+  secDiv.innerHTML = '';
+  const sorted = Object.entries(sections).sort((a,b)=>(a[1].ok/a[1].total)-(b[1].ok/b[1].total));
+  sorted.forEach(([name,d])=>{
+    const p = Math.round(d.ok/d.total*100);
+    const row = document.createElement('div');
+    row.className = 'section-row';
+    row.innerHTML = `<div class="section-name">${name}</div><div class="bar-bg"><div class="bar-fill" style="width:${p}%"></div></div><div class="section-score">${d.ok}/${d.total}</div>`;
+    secDiv.appendChild(row);
+  });
+
+  const advice = $('advice');
+  advice.innerHTML = '';
+  const weak = sorted.filter(([n,d])=>d.ok/d.total < 0.6).slice(0,5);
+  if(weak.length === 0){
+    advice.innerHTML = '<li>🌟 Ты молодец! Слабых мест почти нет.</li>';
+  } else {
+    weak.forEach(([n])=>{
+      const li = document.createElement('li');
+      li.textContent = `📌 Подтяни тему: ${n}`;
+      advice.appendChild(li);
+    });
+  }
+
+  const rev = $('review');
+  rev.innerHTML = '';
+  if(wrong.length === 0){
+    rev.innerHTML = '<div class="ok">✨ Ни одной ошибки! Идеально!</div>';
+  } else {
+    wrong.forEach(({i,q})=>{
+      const userAns = answers[i] === null ? '— (без ответа)' : q.o[answers[i]];
+      const item = document.createElement('div');
+      item.className = 'rev-item';
+      item.innerHTML = `<b>${i+1}.</b> ${q.q}<br><span class="bad">Твой ответ: ${userAns}</span><br><span class="ok">Правильно: ${q.o[q.a]}</span><span style="color:var(--gold)"> — [${q.t}]</span>`;
+      rev.appendChild(item);
+    });
+  }
+  // === Отправка результатов на почту через Formspree ===
+  let wrongText = '';
+  if(wrong.length === 0){
+    wrongText = 'Ни одной ошибки! Идеально! ✨';
+  } else {
+    wrong.forEach(({i,q})=>{
+      const userAns = answers[i] === null ? '(без ответа)' : q.o[answers[i]];
+      wrongText += `${i+1}. ${q.q}\n   Ответ ученика: ${userAns}\n   Правильно: ${q.o[q.a]}\n   Тема: ${q.t}\n\n`;
+    });
+  }
+
+  let sectionsText = '';
+  sorted.forEach(([name,d])=>{
+    const p = Math.round(d.ok/d.total*100);
+    sectionsText += `${name}: ${d.ok}/${d.total} (${p}%)\n`;
+  });
+
+  fetch('https://formspree.io/f/xlgvoypy', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json','Accept':'application/json'},
+    body: JSON.stringify({
+      'Имя ученика': studentName,
+      'Дата': new Date().toLocaleString('ru-RU'),
+      'Результат': `${correct}/${questions.length} (${percent}%)`,
+      'Ранг': rank,
+      'Разделы': sectionsText,
+      'Ошибки': wrongText
+    })
+  }).then(r => console.log('Результаты отправлены ✅'))
+    .catch(e => console.log('Ошибка отправки:', e));
+}
+
+document.getElementById('startBtn').addEventListener('click', startQuiz);
+document.getElementById('nextBtn').addEventListener('click', nextQ);
+document.getElementById('prevBtn').addEventListener('click', prevQ);
+document.getElementById('restartBtn').addEventListener('click', startQuiz);
+</script>
+</body>
+</html>
