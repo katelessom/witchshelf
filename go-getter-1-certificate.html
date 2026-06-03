@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>End-of-Year Test A — Units 1–8</title>
+<style>
+*{box-sizing:border-box;}
+body{margin:0;font-family:Arial,sans-serif;
+background:linear-gradient(rgba(8,40,60,.78),rgba(8,40,60,.82)),url("gemini.jpg");
+background-size:cover;background-position:center;background-attachment:fixed;
+color:#1f2937;line-height:1.5;min-height:100vh;}
+.container{max-width:950px;margin:0 auto;padding:24px 16px 60px;}
+header{background:linear-gradient(135deg,#06d6a0,#ff6b6b);color:#fff;text-align:center;
+padding:28px 20px;border-radius:24px;box-shadow:0 10px 26px rgba(0,0,0,.3);margin-bottom:22px;}
+header h1{margin:0;font-size:40px;}
+header p{margin:8px 0 0;font-size:17px;}
+.card{background:rgba(255,255,255,.97);padding:24px;border-radius:22px;margin-bottom:22px;
+box-shadow:0 8px 26px rgba(0,0,0,.3);}
+h2{color:#05a37a;font-size:30px;margin-top:0;}
+h3{color:#073b4c;font-size:21px;margin-bottom:10px;}
+input[type="text"]{padding:8px 10px;border:2px solid #cfe8f3;border-radius:10px;font-size:16px;margin:4px;font-family:inherit;}
+select{padding:8px;border:2px solid #cfe8f3;border-radius:10px;font-size:16px;font-family:inherit;}
+input:focus,select:focus{outline:none;border-color:#00a6d6;}
+.name-input{width:100%;margin-top:6px;}
+label{font-weight:bold;}
+.question{margin:12px 0;padding:6px 0;}
+.num{color:#ff6b6b;font-weight:900;margin-right:5px;}
+.options{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;}
+.option{display:inline-flex;align-items:center;gap:5px;background:#fff;border:2px solid #d7edf5;
+border-radius:999px;padding:7px 12px;cursor:pointer;}
+.option:hover{border-color:#00a6d6;}
+.text-box{background:#f8fdff;border:2px solid #dcecf3;border-radius:16px;padding:16px;margin-top:10px;}
+.word-box{background:#e9fbf5;border:2px dashed #06d6a0;border-radius:14px;padding:12px;
+display:flex;flex-wrap:wrap;gap:14px;font-weight:bold;color:#05704f;margin:12px 0;}
+.line-input{min-width:120px;}
+.wide{min-width:240px;max-width:100%;}
+.audio-box{background:#e9fbf5;border:2px solid #06d6a0;border-radius:14px;padding:14px;}
+audio{width:100%;margin:10px 0;}
+.buttons{text-align:center;margin:20px 0;}
+button{border:none;border-radius:999px;padding:13px 26px;margin:6px;font-size:17px;
+font-weight:bold;cursor:pointer;font-family:inherit;}
+.next{background:linear-gradient(135deg,#06d6a0,#ff6b6b);color:#fff;}
+.next:disabled{opacity:.5;cursor:not-allowed;}
+.slide{display:none;}
+.slide.active{display:block;animation:fade .4s;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+.progress{height:10px;background:#e2eef5;border-radius:999px;overflow:hidden;margin-bottom:18px;}
+.progress span{display:block;height:100%;background:linear-gradient(90deg,#06d6a0,#ff6b6b);width:0;transition:.4s;}
+.feedback{display:none;margin-top:16px;border-radius:14px;padding:14px;font-weight:bold;}
+.feedback.show{display:block;}
+.fb-score{font-size:22px;color:#05a37a;}
+.fb-list{margin:10px 0 0;font-weight:normal;}
+.fb-list li{margin:4px 0;}
+.correct{border-color:#06d6a0 !important;background:#edfff9 !important;}
+.wrong{border-color:#ff6b6b !important;background:#fff0f4 !important;}
+.ok-text{color:#06a37a;}
+.bad-text{color:#ff6b6b;}
+.result{display:none;background:#fff;border:4px solid #06d6a0;border-radius:22px;padding:24px;
+margin-bottom:22px;box-shadow:0 10px 26px rgba(0,0,0,.3);}
+.big-score{font-size:44px;color:#ff6b6b;font-weight:900;}
+.score-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px;}
+@media(max-width:700px){.score-grid{grid-template-columns:1fr;}header h1{font-size:32px;}}
+.score-item{background:#eefaff;border-radius:14px;padding:12px;font-weight:bold;}
+.certificate{display:none;text-align:center;background:#fff;border:10px solid #06d6a0;
+border-radius:26px;padding:34px 24px;box-shadow:0 14px 35px rgba(0,0,0,.3);}
+.certificate h2{font-size:40px;color:#05a37a;}
+.cert-name{font-size:40px;color:#ff6b6b;font-weight:900;margin:16px 0;}
+.book-title{display:inline-block;background:#e9fbf5;color:#05704f;font-size:30px;font-weight:900;
+padding:10px 22px;border-radius:16px;margin:10px 0;}
+.signature{width:280px;margin:30px auto 0;border-top:2px solid #333;padding-top:8px;font-weight:bold;}
+@media print{body{background:#fff;}header,.slide,.progress,.result .buttons{display:none !important;}
+.certificate{display:block !important;box-shadow:none;}}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+<h1>End-of-Year Test A</h1>
+<p>Units 1–8 · Total: 50 points</p>
+</header>
+
+<div class="progress"><span id="progressBar"></span></div>
+
+<form id="testForm" action="https://formspree.io/f/xgobwbqg" method="POST">
+
+<!-- SLIDE 0: NAME -->
+<div class="card slide active" data-slide="0">
+<h2>Welcome!</h2>
+<p>Write your name and click the button to start the test.</p>
+<label for="studentName">Your name</label>
+<input class="name-input" type="text" id="studentName" name="Name" placeholder="Write your name">
+<div class="buttons"><button type="button" class="next" onclick="startTest()">Start the test</button></div>
+</div>
+
+<!-- SLIDE 1: EX1 -->
+<div class="card slide" data-slide="1">
+<h2>Vocabulary</h2>
+<h3>1. Circle the odd one out.</h3>
+<p style="font-style:italic;color:#555;">
+<b>Example:</b> 0 &nbsp; orange · green · grey ·
+<span style="color:#ff6b6b;font-weight:900;text-decoration:line-through;">lemon</span>
+&nbsp; <span style="color:#06a37a;">(lemon is not a colour → odd one out)</span>
+</p>
+<div class="question"><span class="num">1</span>
+<div class="options">
+<label class="option"><input type="radio" name="ex1_1" value="bird">bird</label>
+<label class="option"><input type="radio" name="ex1_1" value="snake">snake</label>
+<label class="option"><input type="radio" name="ex1_1" value="butterfly">butterfly</label>
+<label class="option"><input type="radio" name="ex1_1" value="parrot">parrot</label>
+</div></div>
+<div class="question"><span class="num">2</span>
+<div class="options">
+<label class="option"><input type="radio" name="ex1_2" value="Monday">Monday</label>
+<label class="option"><input type="radio" name="ex1_2" value="May">May</label>
+<label class="option"><input type="radio" name="ex1_2" value="June">June</label>
+<label class="option"><input type="radio" name="ex1_2" value="July">July</label>
+</div></div>
+<div class="question"><span class="num">3</span>
+<div class="options">
+<label class="option"><input type="radio" name="ex1_3" value="badminton">badminton</label>
+<label class="option"><input type="radio" name="ex1_3" value="tennis">tennis</label>
+<label class="option"><input type="radio" name="ex1_3" value="sailing">sailing</label>
+<label class="option"><input type="radio" name="ex1_3" value="volleyball">volleyball</label>
+</div></div>
+<div class="question"><span class="num">4</span>
+<div class="options">
+<label class="option"><input type="radio" name="ex1_4" value="bedroom">bedroom</label>
+<label class="option"><input type="radio" name="ex1_4" value="garden">garden</label>
+<label class="option"><input type="radio" name="ex1_4" value="kitchen">kitchen</label>
+<label class="option"><input type="radio" name="ex1_4" value="living room">living room</label>
+</div></div>
+<div class="question"><span class="num">5</span>
+<div class="options">
+<label class="option"><input type="radio" name="ex1_5" value="neck">neck</label>
+<label class="option"><input type="radio" name="ex1_5" value="arms">arms</label>
+<label class="option"><input type="radio" name="ex1_5" value="hands">hands</label>
+<label class="option"><input type="radio" name="ex1_5" value="fingers">fingers</label>
+</div></div>
+<div class="feedback" id="fb-1"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(1)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 2: EX2 -->
+<div class="card slide" data-slide="2">
+<h2>Vocabulary</h2>
+<h3>2. Complete the text. Circle the correct answer.</h3>
+<div class="text-box">
+<p>Donna is <span class="num">1</span>
+<label class="option"><input type="radio" name="ex2_1" value="slow">slow</label>
+<label class="option"><input type="radio" name="ex2_1" value="sporty">sporty</label>.
+She plays basketball and she <span class="num">2</span>
+<label class="option"><input type="radio" name="ex2_2" value="goes">goes</label>
+<label class="option"><input type="radio" name="ex2_2" value="does">does</label> taekwondo.
+She's got posters on the <span class="num">3</span>
+<label class="option"><input type="radio" name="ex2_3" value="walls">walls</label>
+<label class="option"><input type="radio" name="ex2_3" value="floors">floors</label>.
+She's got a pet <span class="num">4</span>
+<label class="option"><input type="radio" name="ex2_4" value="rabbit">rabbit</label>
+<label class="option"><input type="radio" name="ex2_4" value="whale">whale</label>.
+Bugs is cute and <span class="num">5</span>
+<label class="option"><input type="radio" name="ex2_5" value="wavy">wavy</label>
+<label class="option"><input type="radio" name="ex2_5" value="fast">fast</label> too.</p>
+</div>
+<div class="feedback" id="fb-2"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(2)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 3: EX3 -->
+<div class="card slide" data-slide="3">
+<h2>Vocabulary</h2>
+<h3>3. Complete the email. There is one extra word.</h3>
+<div class="word-box"><span>drink</span><span>early</span><span>football</span><span>guitar</span><span>home</span><span>on</span><span>out</span></div>
+<div class="text-box">
+<p>I'm <span class="num">1</span><input class="line-input" type="text" name="ex3_1"> holiday in Italy.
+We don't go to bed <span class="num">2</span><input class="line-input" type="text" name="ex3_2">.
+We <span class="num">3</span><input class="line-input" type="text" name="ex3_3"> a lot of water.
+In the evening, we hang <span class="num">4</span><input class="line-input" type="text" name="ex3_4"> with the family.
+They play the <span class="num">5</span><input class="line-input" type="text" name="ex3_5">.</p>
+</div>
+<div class="feedback" id="fb-3"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(3)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 4: EX4 -->
+<div class="card slide" data-slide="4">
+<h2>Grammar</h2>
+<h3>4. Circle the correct word.</h3>
+<div class="question"><span class="num">1</span> We are Chinese but ___ home is in Canada.
+<div class="options">
+<label class="option"><input type="radio" name="ex4_1" value="your">your</label>
+<label class="option"><input type="radio" name="ex4_1" value="our">our</label>
+<label class="option"><input type="radio" name="ex4_1" value="us">us</label>
+</div></div>
+<div class="question"><span class="num">2</span> Spiders are ugly and I hate ___!
+<div class="options">
+<label class="option"><input type="radio" name="ex4_2" value="they">they</label>
+<label class="option"><input type="radio" name="ex4_2" value="it">it</label>
+<label class="option"><input type="radio" name="ex4_2" value="them">them</label>
+</div></div>
+<div class="question"><span class="num">3</span> This cat is brown but ___ cats are white.
+<div class="options">
+<label class="option"><input type="radio" name="ex4_3" value="that">that</label>
+<label class="option"><input type="radio" name="ex4_3" value="those">those</label>
+</div></div>
+<div class="question"><span class="num">4</span> ___ eyes are blue.
+<div class="options">
+<label class="option"><input type="radio" name="ex4_4" value="Ewa">Ewa</label>
+<label class="option"><input type="radio" name="ex4_4" value="Ewa's">Ewa's</label>
+</div></div>
+<div class="question"><span class="num">5</span> Are there ___ lions in India?
+<div class="options">
+<label class="option"><input type="radio" name="ex4_5" value="a">a</label>
+<label class="option"><input type="radio" name="ex4_5" value="any">any</label>
+</div></div>
+<div class="feedback" id="fb-4"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(4)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 5: EX5 -->
+<div class="card slide" data-slide="5">
+<h2>Grammar</h2>
+<h3>5. Use the correct form of the verbs.</h3>
+<div class="text-box">
+<p>I go to the beach but Tilly <span class="num">1</span><input class="wide" type="text" name="ex5_1" placeholder="go / never"> there.
+She hates <span class="num">2</span><input class="wide" type="text" name="ex5_2" placeholder="sit"> in the sun.
+Henry <span class="num">3</span><input class="wide" type="text" name="ex5_3" placeholder="not like"> cycling — he
+<span class="num">4</span><input class="wide" type="text" name="ex5_4" placeholder="not have got"> a bike.
+He likes <span class="num">5</span><input class="wide" type="text" name="ex5_5" placeholder="walk">.</p>
+</div>
+<div class="feedback" id="fb-5"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(5)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 6: EX6 -->
+<div class="card slide" data-slide="6">
+<h2>Grammar</h2>
+<h3>6. Write the questions.</h3>
+<div class="question"><span class="num">1</span> A: <input class="wide" type="text" name="ex6_1"> a rat under the table? B: Yes, there is.</div>
+<div class="question"><span class="num">2</span> A: <input class="wide" type="text" name="ex6_2"> for the family? B: No, my mum doesn't cook.</div>
+<div class="question"><span class="num">3</span> A: Where <input class="wide" type="text" name="ex6_3"> live? B: In Warsaw.</div>
+<div class="question"><span class="num">4</span> A: Whose <input class="wide" type="text" name="ex6_4"> it? B: It's Mike's.</div>
+<div class="question"><span class="num">5</span> A: <input class="wide" type="text" name="ex6_5"> golf? B: No, I can't.</div>
+<div class="feedback" id="fb-6"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(6)">Check &amp; Next</button></div>
+</div>
+<!-- SLIDE 7: EX7 LISTENING -->
+<div class="card slide" data-slide="7">
+<h2>Listening</h2>
+<h3>7. Listen and complete the notes.</h3>
+<div class="audio-box">
+<p><b>Listen to the audio twice.</b></p>
+<audio id="testAudio" controls preload="auto">
+  <source src="audio.mp3" type="audio/mpeg">
+  <source src="gogetter_tests1_11.mp3" type="audio/mpeg">
+  Your browser does not support audio.
+</audio>
+<p id="audioError" style="display:none;color:#ff6b6b;font-weight:bold;margin-top:8px;">
+  ⚠️ Audio file not found. Check that the mp3 file is in the same folder as test.html.
+</p>
+</div>
+<script>
+(function(){
+  var a=document.getElementById("testAudio");
+  if(a){a.addEventListener("error",function(){document.getElementById("audioError").style.display="block";});}
+})();
+</script>
+<h3>Henry</h3>
+<div class="question"><span class="num">1</span> What time does he get up? At <input class="line-input" type="text" name="ex7_1"> o'clock.</div>
+<div class="question"><span class="num">2</span> Where does he go? To <input class="line-input" type="text" name="ex7_2">.</div>
+<div class="question"><span class="num">3</span> What sport does he play? <input class="line-input" type="text" name="ex7_3">.</div>
+<h3>Rosie</h3>
+<div class="question"><span class="num">4</span> Does she like getting up early? <input class="line-input" type="text" name="ex7_4">.</div>
+<div class="question"><span class="num">5</span> What can she write? <input class="line-input" type="text" name="ex7_5">.</div>
+<div class="question"><span class="num">6</span> What is she? An <input class="line-input" type="text" name="ex7_6">.</div>
+<div class="feedback" id="fb-7"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(7)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 8: EX8 COMMUNICATION -->
+<div class="card slide" data-slide="8">
+<h2>Communication</h2>
+<h3>8. Circle the correct answer.</h3>
+<div class="question"><span class="num">1</span> A: Hello. Please ___ in. B: Thank you.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_1" value="walk">walk</label>
+<label class="option"><input type="radio" name="ex8_1" value="come">come</label>
+</div></div>
+<div class="question"><span class="num">2</span> A: Erin, ___ is my aunt.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_2" value="it">it</label>
+<label class="option"><input type="radio" name="ex8_2" value="this">this</label>
+</div></div>
+<div class="question"><span class="num">3</span> A: Nice to meet you. B: Nice to meet you ___.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_3" value="too">too</label>
+<label class="option"><input type="radio" name="ex8_3" value="please">please</label>
+</div></div>
+<div class="question"><span class="num">4</span> A: Where's the bathroom? B: ___ me show you.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_4" value="Let">Let</label>
+<label class="option"><input type="radio" name="ex8_4" value="Like">Like</label>
+</div></div>
+<div class="question"><span class="num">5</span> A: Sorry ___ that! B: That's all right.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_5" value="at">at</label>
+<label class="option"><input type="radio" name="ex8_5" value="about">about</label>
+</div></div>
+<div class="question"><span class="num">6</span> A: ___ you like a sandwich? B: No, thank you.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_6" value="Do">Do</label>
+<label class="option"><input type="radio" name="ex8_6" value="Would">Would</label>
+</div></div>
+<div class="question"><span class="num">7</span> A: ___ go rock climbing! B: I'm not sure.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_7" value="Can">Can</label>
+<label class="option"><input type="radio" name="ex8_7" value="Let's">Let's</label>
+</div></div>
+<div class="question"><span class="num">8</span> A: ___ the weather like? B: It's warm.
+<div class="options">
+<label class="option"><input type="radio" name="ex8_8" value="What">What</label>
+<label class="option"><input type="radio" name="ex8_8" value="How">How</label>
+</div></div>
+<div class="feedback" id="fb-8"></div>
+<div class="buttons"><button type="button" class="next" onclick="checkSlide(8)">Check &amp; Next</button></div>
+</div>
+
+<!-- SLIDE 9: EX9 READING -->
+<div class="card slide" data-slide="9">
+<h2>Reading</h2>
+<h3>9. Read the blog. Then write T, F or DS.</h3>
+<div class="text-box">
+<h3>My favourite animals</h3>
+<p>My favourite animals are spider monkeys. They've got a small head, long arms and long legs. Their hair is black or brown. They've got four long fingers on their hands, but five toes on their feet. They've got a long tail.</p>
+<p>They live in trees in Brazil and Mexico and they can jump from tree to tree. They're fast! They play and sleep in the trees. They sometimes come down and walk on the ground. There are usually thirty spider monkeys in a family.</p>
+<p>Spider monkeys are clever and cute, and I love them.</p>
+</div>
+<div class="question"><span class="num">1</span> Spider monkeys have got black or brown hair.
+<select name="ex9_1"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="question"><span class="num">2</span> They haven't got five fingers on their hands.
+<select name="ex9_2"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="question"><span class="num">3</span> They live and sleep in trees.
+<select name="ex9_3"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="question"><span class="num">4</span> They never walk on the ground.
+<select name="ex9_4"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="question"><span class="num">5</span> They can't swim.
+<select name="ex9_5"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="question"><span class="num">6</span> They have got small families.
+<select name="ex9_6"><option value="">Choose</option><option value="T">T</option><option value="F">F</option><option value="DS">DS</option></select></div>
+<div class="feedback" id="fb-9"></div>
+<div class="buttons"><button type="button" class="next" onclick="finishTest()">Finish &amp; See result</button></div>
+</div>
+
+<input type="hidden" name="Total score" id="hiddenTotal">
+<input type="hidden" name="Section scores" id="hiddenSections">
+</form>
+
+<!-- RESULT -->
+<div class="result" id="result">
+<h2>Your result</h2>
+<div class="big-score" id="totalScore">0 / 50</div>
+<p id="message"></p>
+<div class="score-grid">
+<div class="score-item" id="vocabScore">Vocabulary: 0 / 15</div>
+<div class="score-item" id="grammarScore">Grammar: 0 / 15</div>
+<div class="score-item" id="listeningScore">Listening: 0 / 6</div>
+<div class="score-item" id="communicationScore">Communication: 0 / 8</div>
+<div class="score-item" id="readingScore">Reading: 0 / 6</div>
+</div>
+<div class="buttons"><button type="button" class="next" onclick="showCertificate()">Get my certificate</button></div>
+</div>
+
+<!-- CERTIFICATE -->
+<div class="certificate" id="certificate">
+<h2>🏆 Certificate of Completion 🏆</h2>
+<p>This certificate is proudly presented to</p>
+<div class="cert-name" id="certName">Student</div>
+<p>for successfully completing the course</p>
+<div class="book-title">Go Getter 1</div>
+<p style="font-size:22px;">Final score: <b id="certScore">0 / 50</b></p>
+<p id="certMessage" style="font-size:18px;"></p>
+<div class="signature">Teacher's signature</div>
+<div class="buttons"><button type="button" class="next" onclick="window.print()">Print certificate</button></div>
+</div>
+
+<script>
+const correctAnswers={
+ex1_1:"snake",ex1_2:"Monday",ex1_3:"sailing",ex1_4:"garden",ex1_5:"neck",
+ex2_1:"sporty",ex2_2:"does",ex2_3:"walls",ex2_4:"rabbit",ex2_5:"fast",
+ex3_1:["on"],ex3_2:["early"],ex3_3:["drink"],ex3_4:["out"],ex3_5:["guitar"],
+ex4_1:"our",ex4_2:"them",ex4_3:"those",ex4_4:"Ewa's",ex4_5:"any",
+ex5_1:["never goes"],ex5_2:["sitting"],ex5_3:["doesn't like","does not like"],ex5_4:["hasn't got","has not got"],ex5_5:["walking"],
+ex6_1:["is there"],ex6_2:["does your mum cook","does your mother cook"],ex6_3:["do her grandparents","do your grandparents"],ex6_4:["mountain bike is"],ex6_5:["can you play"],
+ex7_1:["seven","7","half past seven"],ex7_2:["school"],ex7_3:["hockey"],ex7_4:["yes","yes she does","yes, she does"],ex7_5:["stories"],ex7_6:["actor"],
+ex8_1:"come",ex8_2:"this",ex8_3:"too",ex8_4:"Let",ex8_5:"about",ex8_6:"Would",ex8_7:"Let's",ex8_8:"What",
+ex9_1:"T",ex9_2:"T",ex9_3:"T",ex9_4:"F",ex9_5:"DS",ex9_6:"F"
+};
+const slideFields={
+1:["ex1_1","ex1_2","ex1_3","ex1_4","ex1_5"],
+2:["ex2_1","ex2_2","ex2_3","ex2_4","ex2_5"],
+3:["ex3_1","ex3_2","ex3_3","ex3_4","ex3_5"],
+4:["ex4_1","ex4_2","ex4_3","ex4_4","ex4_5"],
+5:["ex5_1","ex5_2","ex5_3","ex5_4","ex5_5"],
+6:["ex6_1","ex6_2","ex6_3","ex6_4","ex6_5"],
+7:["ex7_1","ex7_2","ex7_3","ex7_4","ex7_5","ex7_6"],
+8:["ex8_1","ex8_2","ex8_3","ex8_4","ex8_5","ex8_6","ex8_7","ex8_8"],
+9:["ex9_1","ex9_2","ex9_3","ex9_4","ex9_5","ex9_6"]
+};
+const sections={
+vocabulary:[1,2,3],grammar:[4,5,6],listening:[7],communication:[8],reading:[9]
+};
+const slideScore={};
+let totalSlides=9,currentSlide=0;
+
+function normalize(v){return String(v||"").trim().toLowerCase().replace(/[’`]/g,"'").replace(/[?.!,]/g,"").replace(/\s+/g," ");}
+function getUserAnswer(name){const f=document.getElementsByName(name);if(!f||!f.length)return"";const first=f[0];if(first.type==="radio"){const c=document.querySelector('input[name="'+name+'"]:checked');return c?c.value:"";}if(first.tagName==="SELECT")return first.value;return first.value;}
+function correctText(name){const c=correctAnswers[name];return Array.isArray(c)?c[0]:c;}
+function answerIsCorrect(name){const u=getUserAnswer(name),c=correctAnswers[name];if(Array.isArray(c))return c.map(normalize).includes(normalize(u));return normalize(u)===normalize(c);}
+function markAnswer(name,ok){const f=document.getElementsByName(name);f.forEach(function(field){if(field.type==="radio"){const w=field.closest(".option");if(w){w.classList.remove("correct","wrong");if(field.checked)w.classList.add(ok?"correct":"wrong");}}else{field.classList.remove("correct","wrong");field.classList.add(ok?"correct":"wrong");}});}
+
+function setProgress(){document.getElementById("progressBar").style.width=(currentSlide/totalSlides*100)+"%";}
+function goTo(n){document.querySelectorAll(".slide").forEach(function(s){s.classList.remove("active");});const t=document.querySelector('.slide[data-slide="'+n+'"]');if(t)t.classList.add("active");currentSlide=n;setProgress();window.scrollTo({top:0,behavior:"smooth"});}
+
+function startTest(){
+const name=document.getElementById("studentName").value.trim();
+if(!name){alert("Please write your name.");return;}
+goTo(1);
+}
+
+function checkSlide(n){
+const fields=slideFields[n];let score=0;let html="<ul class='fb-list'>";
+fields.forEach(function(name,i){
+const ok=answerIsCorrect(name);if(ok)score++;markAnswer(name,ok);
+html+="<li class='"+(ok?"ok-text":"bad-text")+"'>"+(i+1)+". "+(ok?"✔ Correct":"�’ "+("Correct answer: "+correctText(name)))+"</li>";
+});
+html+="</ul>";
+slideScore[n]=score;
+const fb=document.getElementById("fb-"+n);
+fb.innerHTML="<div class='fb-score'>You got "+score+" / "+fields.length+"</div>"+html;
+fb.classList.add("show");
+const btn=fb.parentElement.querySelector(".next");
+btn.textContent=(n===totalSlides)?"Finish & See result":"Next →";
+btn.onclick=function(){ (n===totalSlides)?finishTest():goTo(n+1); };
+}
+
+function sumSlides(arr){let s=0;arr.forEach(function(n){s+=(slideScore[n]||0);});return s;}
+
+function finishTest(){
+for(let n=1;n<=totalSlides;n++){if(slideScore[n]===undefined){checkSlide(n);}}
+const v=sumSlides(sections.vocabulary),g=sumSlides(sections.grammar),l=sumSlides(sections.listening),c=sumSlides(sections.communication),r=sumSlides(sections.reading);
+const total=v+g+l+c+r;
+document.querySelectorAll(".slide").forEach(function(s){s.classList.remove("active");});
+document.getElementById("progressBar").style.width="100%";
+document.getElementById("totalScore").textContent=total+" / 50";
+document.getElementById("vocabScore").textContent="Vocabulary: "+v+" / 15";
+document.getElementById("grammarScore").textContent="Grammar: "+g+" / 15";
+document.getElementById("listeningScore").textContent="Listening: "+l+" / 6";
+document.getElementById("communicationScore").textContent="Communication: "+c+" / 8";
+document.getElementById("readingScore").textContent="Reading: "+r+" / 6";
+let m="";
+if(total>=45)m="Excellent work!";
+else if(total>=38)m="Very good work!";
+else if(total>=30)m="Good job! Keep practising.";
+else m="Well done for finishing. Let's revise and try again.";
+document.getElementById("message").textContent=m;
+document.getElementById("result").style.display="block";
+document.getElementById("result").scrollIntoView({behavior:"smooth"});
+document.getElementById("hiddenTotal").value=total+" / 50";
+document.getElementById("hiddenSections").value="Vocab "+v+"/15, Grammar "+g+"/15, Listening "+l+"/6, Comm "+c+"/8, Reading "+r+"/6";
+sendResults();
+}
+
+function sendResults(){
+const form=document.getElementById("testForm");
+const data=new FormData(form);
+fetch(form.action,{method:"POST",body:data,headers:{"Accept":"application/json"}}).catch(function(){});
+}
+
+function showCertificate(){
+const name=document.getElementById("studentName").value.trim()||"Student";
+document.getElementById("certName").textContent=name;
+document.getElementById("certScore").textContent=document.getElementById("totalScore").textContent;
+document.getElementById("certMessage").textContent=document.getElementById("message").textContent;
+document.getElementById("result").style.display="none";
+document.getElementById("certificate").style.display="block";
+document.getElementById("certificate").scrollIntoView({behavior:"smooth"});
+}
+
+setProgress();
+</script>
+</body>
+</html>
